@@ -16,12 +16,20 @@ import { dirname } from "node:path";
 const ENTRY_WORD = "machene";
 const OUTPUT_PATH = "/output/entry.txt";
 
+// The sealed scorer's gate, from RULES.txt: UTF-8 text of 1 to 30
+// characters, not only white space.
+const MIN_CHARS = 1;
+const MAX_CHARS = 30;
+
 function main(): void {
-  // Self-check against the bounty gate: UTF-8 text of 1 to 30 characters,
-  // not only white space. Fail loudly instead of writing an entry the
-  // sealed scorer would refuse.
+  // Self-check against the bounty gate. Fail loudly instead of writing
+  // an entry the sealed scorer would refuse.
   const codePoints = [...ENTRY_WORD].length;
-  if (codePoints < 1 || codePoints > 30 || ENTRY_WORD.trim() === "") {
+  if (
+    codePoints < MIN_CHARS ||
+    codePoints > MAX_CHARS ||
+    ENTRY_WORD.trim() === ""
+  ) {
     throw new Error("entry word fails the 1-30 character gate");
   }
   mkdirSync(dirname(OUTPUT_PATH), { recursive: true });
